@@ -34,7 +34,7 @@ def fetch_news():
     return categorized_news
 
 def update_dashboard(news_data):
-    filename = 'israel-ai-dashboard.html'
+    filename = 'index.html'  # במקום israel-ai-dashboard.html
     update_time = datetime.now().strftime('%d/%m/%Y %H:%M')
     
     html_template = f"""
