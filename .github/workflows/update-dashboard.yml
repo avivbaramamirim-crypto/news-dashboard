@@ -8,12 +8,11 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
-    # השורות הבאות הן הקריטיות לתיקון!
     permissions:
-      contents: write
+      contents: write # חובה כדי לשמור את הקובץ
       
     steps:
-      - uses: actions/checkout@v4 # עדכון לגרסה יציבה יותר
+      - uses: actions/checkout@v4
       
       - uses: actions/setup-python@v5
         with:
@@ -24,10 +23,10 @@ jobs:
           pip install -r requirements.txt
           python fetch_news.py
       
-      - name: Commit and Push changes
+      - name: Force Commit and Push
         run: |
-          git config --global user.email 'action@github.com'
-          git config --global user.name 'GitHub Action'
-          git add .
-          # ביצוע קומיט רק אם יש שינויים בקבצים
-          git diff --quiet && git diff --staged --quiet || (git commit -m '🔄 Update dashboard' && git push)
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add index.html
+          git commit -m "🚀 Force update dashboard" || echo "No changes to commit"
+          git push origin main
