@@ -39,12 +39,10 @@ def update_dashboard(news_data):
     tz = pytz.timezone('Asia/Jerusalem')
     update_time = datetime.now(tz).strftime('%d/%m/%Y %H:%M')
 
-    # בניית הלשוניות בנפרד
     tabs_html = ""
     for cat in news_data.keys():
         tabs_html += f'<button class="tab-btn" onclick="showCategory(\'{cat}\')">{cat}</button>\n'
 
-    # בניית תוכן הידיעות בנפרד
     content_html = ""
     for cat, items in news_data.items():
         content_html += f'<div id="{cat}" class="news-section" style="display:none"><div class="news-grid">\n'
@@ -53,7 +51,6 @@ def update_dashboard(news_data):
             content_html += f'<div class="card"><a href="{i["link"]}" target="_blank">{i["title"]}</a><div class="meta"><span class="source-tag">{i["source"]}</span><span>{pub}</span></div></div>\n'
         content_html += '</div></div>\n'
 
-    # בניית ה-HTML המלא ללא f-string גדול
     html_top = """<!DOCTYPE html>
 <html lang="he" dir="rtl" id="html-tag">
 <head>
@@ -130,7 +127,6 @@ def update_dashboard(news_data):
 </body>
 </html>"""
 
-    # הרכבת הכל יחד
     final_html = html_top + update_time + html_mid1 + tabs_html + html_mid2 + content_html + html_bottom
     
     with open(filename, 'w', encoding='utf-8') as f:
