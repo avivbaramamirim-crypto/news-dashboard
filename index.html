@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" id="html-tag">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>לוח החדשות של אוהד ברעם</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --accent: #2563eb; --dim: #64748b; }
+        [data-theme="dark"] { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --dim: #94a3b8; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: background 0.3s, color 0.3s; padding-bottom: 50px; }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card); box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .controls { display: flex; gap: 10px; }
+        .btn { background: var(--bg); border: 1px solid var(--dim); color: var(--text); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .hero { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, var(--accent), #1d4ed8); color: white; }
+        .weather-widget { margin-top: 15px; font-size: 1.1rem; background: rgba(255,255,255,0.1); display: inline-block; padding: 10px 20px; border-radius: 50px; backdrop-filter: blur(5px); }
+        .tabs { display: flex; justify-content: center; gap: 10px; margin: 20px 0; padding: 0 10px; flex-wrap: wrap; }
+        .tab-btn { padding: 10px 25px; border: none; background: var(--card); color: var(--text); border-radius: 25px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .tab-btn.active { background: var(--accent); color: white; }
+        .container { max-width: 1100px; margin: auto; padding: 0 15px; }
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+        .card a { color: var(--text); text-decoration: none; font-weight: bold; font-size: 1.1rem; display: block; margin-bottom: 15px; line-height: 1.4; }
+        .card .meta { font-size: 0.8rem; color: var(--dim); display: flex; justify-content: space-between; align-items: center; }
+        .card .source-tag { background: rgba(37, 99, 235, 0.1); color: var(--accent); padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        [dir="ltr"] { text-align: left; } [dir="rtl"] { text-align: right; }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="nav-bar">
+        <div class="controls">
+            <button class="btn" onclick="toggleTheme()" title="החלף עיצוב"><i class="fas fa-moon"></i></button>
+            <button class="btn" onclick="toggleLang()">EN / עב</button>
+        </div>
+        <div id="update-time" style="font-size: 0.85rem; color: var(--dim); font-weight: bold;">עודכן: 06/03/2026 22:28</div>
+    </div>
+    <div class="hero">
+        <h1 id="main-title"><i class="fas fa-globe"></i> לוח החדשות של אוהד ברעם</h1>
+        <div class="weather-widget" id="weather">ישראל: 22°C | בהיר <i class="fas fa-sun"></i></div>
+    </div>
+    <div class="tabs">
+<button class="tab-btn" onclick="showCategory('ישראל')">ישראל</button>
+<button class="tab-btn" onclick="showCategory('AI וטכנולוגיה')">AI וטכנולוגיה</button>
+    </div>
+    <div class="container" id="content-area">
+<div id="ישראל" class="news-section" style="display:none"><div class="news-grid">
+<div class="card"><a href="https://news.google.com/rss/articles/CBMipwFBVV95cUxQRGJXZkp3VkZ4WDhETGtSbTl4b0MtY253MlNCdno2ZlNUT3NteUcyTnE2Ymt1ZVRyQ2tkeHVocnZhbHFzblI4bzdEWDZINWdLbFF6TkdQdmRnb2VFUjgwZGdkV1BPVFRrc2ZBWlRVNnJXVUE0Wl9FUG1Uc0E1aEdEYTdQTVA2OXc1amxxMTlyX1cySlp4Q1F3VWhUejhXZlZvZ096eDdKUQ?oc=5" target="_blank">ג'יי.פי מורגן: פגיעת המלחמה בכלכלת ישראל תהיה מוגבלת וקצרת־מועד - TheMarker</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://news.google.com/rss/articles/CBMirgFBVV95cUxONVBDWENnMjFBRE1oV2VyckJscV93VDc0NnVVYVZmUm1NZUpyUGxQRjdaeFRWYmpvT1dBZHltZmRBVE80cm1BbGZCMkUxUHVrS1lueWZjWlVldlBqNTBfdzRXd19NX1JRWXhldFNsTERFR1VqUXRYZ0dneGctWEE2d3FyRksxZnE5LXhqVF9KUnNOcmZRRm91X2xSd0M1OG9aeHpUZ0tfTHZPaF91T1E?oc=5" target="_blank">"מישל": זה השיר שייצג את ישראל באירוויזיון 2026 - הארץ</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Thu, 05 Mar 2026</span></div></div>
+<div class="card"><a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTFB2SXBJWlNPRDA4enBHR2FjcldhOGo1ckNtVVJ1Y2FWNVJIM2RtRWpvd1NGZ0lmSllTTFBwNzBMbUVjUmgzM0hLa1ZPaVJwU3cxTEJyT0l2Z3lYU1o2LVpvZTVwc0R4UQ?oc=5" target="_blank">אירוויזיון 2026: נחשף השיר שייצג את ישראל | צפו - ynet</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Thu, 05 Mar 2026</span></div></div>
+<div class="card"><a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE85eHMxUjFOTGgyOUZ5X1AyY0VCTDN2VWdDZnZxMEhrRmdoMkJRQnpwdXlUVFR3SHNNX3czUnNuTUVzZVktYjluNF9UZEtlaUlBTndWSHFCRHJEaVRmVkdPR2VSa0Q?oc=5" target="_blank">"שיר צרפתי": הסערה סביב השיר "מישל" של ישראל לאירוויזיון - מעריב</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE5WdGMxMU51cEd6Wmk0Um9mSlNQeTgtUkdDYnh0eEhfelVrdGc3VTZrODQxU085NkFRZGN4dW0zcFBCM3M5bThKZ181dFB3bHdiRGNhUXJKX1p3RV8wZ0dpOGlXejlGUQ?oc=5" target="_blank">מצור על ישראל: תרחיש האימים התאפשר לאחר שישראל מכרה את נשק יום הדין | שלמה מעוז - מעריב</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://news.google.com/rss/articles/CBMidkFVX3lxTE1DTklnTUtWQ1NENVMtRmlpM0pZOTd6QlV4TjZoOEdDSkNyLWVWeUxLbTNEczVwSE9BdmRXZms5MEtYb0hWYzhXX0l1eHRBdUVOSXNLU3JJUExDcno4S2lFNVBnLXRjazVCaUZvdWNsN0owTFJMUkE?oc=5" target="_blank">גשם הטילים של 91': הסקאדים העיראקיים שאיימו על ישראל במלחמת המפרץ - כאן 11</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Thu, 05 Mar 2026</span></div></div>
+<div class="card"><a href="https://news.google.com/rss/articles/CBMiREFVX3lxTFBuUFg5YUpJSlRBQkF6WjV2SkthRHlUVVBFclFXTEhldEx4SHRSRkN6WXVmSlZLUk1vSTE5VEFoVEhhNzFS?oc=5" target="_blank">"שאגת הארי" מחזק את נתניהו – אך לא משנה את הגושים - זמן ישראל</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Thu, 05 Mar 2026</span></div></div>
+<div class="card"><a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE1UeVBxamxLNDFwVUxNU25qa05nVXZRSVZFZ1Z4THRvY0J6N1BBNjc2bGxySndRbEpXSFlZRHpVQ0FHck1KUWFURnItRFJWd0lxUmRLS0pQN3N2MWxkWGx1TWJFWXM?oc=5" target="_blank">אחרי שטראמפ התפוצץ על הרצוג בעניין החנינה - ישראל כ"ץ מגיב: "צודק בכל מילה" - מעריב</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Thu, 05 Mar 2026</span></div></div>
+<div class="card"><a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTFBzWDNsT3dMTmF5UDRjazdnYmM4UnZ1ZkFvT2tfb3IyemVhVjFHcjFCMnVhaUtaVElHQXZQbjA3dlFMbUloTW5EM3lXemRzS3R0NGprSWRhZ3NIRUhhLW9oRkxTS25QZlUt?oc=5" target="_blank">גבירותיי ורבותיי, מהפך: בבוקר שאחרי 7 באוקטובר קמה כאן ישראל אחרת - מקור ראשון</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://news.google.com/rss/articles/CBMihgFBVV95cUxNUXVBVm1xTFNIN3NUVWppWDFhWEFmcW5EcmlocTY0OVBhNW1ScENZeDdLVndlc2xOQkNrUk5EODR3RzJ3RXlLZ292TllWTjJhb3d2VFlSeEVQd2dkOU9pVlBLbUN3aWw4TVNOdm5wRWZRY2VPSnpCTHBoMDQ3MTJXeXZlMmZnZw?oc=5" target="_blank">חילופי אש בין ישראל לחיזבאללה: תיעוד מתקיפת חיל האוויר בדאחיה - mako</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.ynet.co.il/news/article/hj8eisdkwl" target="_blank">טראמפ רוצה "מודל ונצואלה" באיראן, אבל בטהרן אין דלסי רודריגז</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.ynet.co.il/news/article/b161zt00fbx" target="_blank">100,000 אנשי משטר - רק בטהרן: "רגע המבחן של ההתקוממות יגיע, ואולי בקרוב"</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.ynet.co.il/news/article/yokra14699069" target="_blank">האיש הנכון בזמן הנכון</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.ynet.co.il/news/article/yokra14700865" target="_blank">המטרות הריאליות יותר של המלחמה</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.ynet.co.il/news/article/yokra14700572" target="_blank">גם עכשיו, מכונת הרעל ממשיכה לעבוד שעות נוספות</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.ynet.co.il/news/article/hjnccudyzg" target="_blank">דובר צה"ל לתקשורת הזרה: המטחים המקבילים מאיראן ומלבנון תואמו מראש</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.ynet.co.il/news/article/hjqypdoybg" target="_blank">"אחת הדמויות המשפיעות על חמינאי": צה"ל ניסה לחסל יועץ בכיר למנהיג לשעבר</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.ynet.co.il/news/article/sk0nqvutbl" target="_blank">הבונקר הענק של חמינאי הושמד, המודיעין הצביע: בכיר מאוד במשטר היה בתוכו | תיעוד</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.ynet.co.il/news/article/b1j2gidkwx" target="_blank">הורים ללוחמים שנפצעו בלבנון: "הטיל נפל באמצע הטנק, מזל שהילדים שלנו בחיים"</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.ynet.co.il/news/article/byf67pofwl" target="_blank">ראשי רשויות בצפון לרמטכ"ל: "להכות את חיזבאללה זה לא מספיק. מה שונה הפעם?"</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
+</div></div>
+<div id="AI וטכנולוגיה" class="news-section" style="display:none"><div class="news-grid">
+<div class="card"><a href="https://www.artificialintelligence-news.com/news/scaling-intelligent-automation-without-breaking-live-workflows/" target="_blank">Scaling intelligent automation without breaking live workflows</a><div class="meta"><span class="source-tag">AI News</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.artificialintelligence-news.com/news/rowspace-50m-ai-private-equity-sequoia-emergence/" target="_blank">The firm that never forgets: Rowspace launches with $50M to make AI for private equity actually work</a><div class="meta"><span class="source-tag">AI News</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.artificialintelligence-news.com/news/jpmorgan-expands-ai-investment/" target="_blank">JPMorgan expands AI investment as tech spending nears $20B</a><div class="meta"><span class="source-tag">AI News</span><span>Thu, 05 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.artificialintelligence-news.com/news/dyna-ai-series-a-agentic-ai-financial-services/" target="_blank">Beyond the pilot: Dyna.Ai raises eight-figure Series A to put agentic AI in financial services to work</a><div class="meta"><span class="source-tag">AI News</span><span>Thu, 05 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.artificialintelligence-news.com/news/physical-ai-global-race-robots-manufacturing-2026/" target="_blank">Physical AI is having its moment–and everyone wants a piece of it</a><div class="meta"><span class="source-tag">AI News</span><span>Wed, 04 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.artificialintelligence-news.com/news/ai-agents-prefer-bitcoin-new-finance-architecture/" target="_blank">AI agents prefer Bitcoin shaping new finance architecture</a><div class="meta"><span class="source-tag">AI News</span><span>Wed, 04 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.artificialintelligence-news.com/news/google-industrial-robotics-ai-physical-ai-intrinsic/" target="_blank">Google makes its industrial robotics AI play official–and this time, it means business</a><div class="meta"><span class="source-tag">AI News</span><span>Wed, 04 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.artificialintelligence-news.com/news/best-ai-security-solutions-2026-top-enterprise-platforms-compared/" target="_blank">Best AI security solutions 2026: Top enterprise platforms compared</a><div class="meta"><span class="source-tag">AI News</span><span>Tue, 03 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.artificialintelligence-news.com/news/the-integration-of-ai-in-modern-forex-automation/" target="_blank">The integration of AI in modern forex automation</a><div class="meta"><span class="source-tag">AI News</span><span>Tue, 03 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.artificialintelligence-news.com/news/physical-ai-adoption-boosts-customer-service-roi/" target="_blank">Physical AI adoption boosts customer service ROI</a><div class="meta"><span class="source-tag">AI News</span><span>Tue, 03 Mar 2026</span></div></div>
+<div class="card"><a href="https://twitter.com/JosephPolitano/status/2029916364664611242" target="_blank">Tech employment now significantly worse than the 2008 or 2020 recessions</a><div class="meta"><span class="source-tag">Hacker News</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://github.com/moongate-community/moongatev2" target="_blank">Show HN: Moongate – Ultima Online server emulator in .NET 10 with Lua scripting</a><div class="meta"><span class="source-tag">Hacker News</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://opencamera.org.uk/" target="_blank">Open Camera is a FOSS Camera App for Android</a><div class="meta"><span class="source-tag">Hacker News</span><span>Mon, 02 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.anthropic.com/news/mozilla-firefox-security" target="_blank">Hardening Firefox with Anthropic's Red Team</a><div class="meta"><span class="source-tag">Hacker News</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.adaic.org/ada-resources/standards/ada22/" target="_blank">Ada 2022</a><div class="meta"><span class="source-tag">Hacker News</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://walzr.com/payphone-go/" target="_blank">Payphone Go</a><div class="meta"><span class="source-tag">Hacker News</span><span>Mon, 02 Mar 2026</span></div></div>
+<div class="card"><a href="https://www.lumafield.com/scan-of-the-month/health-wearables" target="_blank">CT Scans of Health Wearables</a><div class="meta"><span class="source-tag">Hacker News</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://github.com/ppp-one/astra" target="_blank">Astra: An open-source observatory control software</a><div class="meta"><span class="source-tag">Hacker News</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://spectrum.ieee.org/3d-scanning-particle-accelerator-antscan" target="_blank">Entomologists use a particle accelerator to image ants at scale</a><div class="meta"><span class="source-tag">Hacker News</span><span>Fri, 06 Mar 2026</span></div></div>
+<div class="card"><a href="https://otava.apache.org/" target="_blank">Apache Otava</a><div class="meta"><span class="source-tag">Hacker News</span><span>Sun, 01 Mar 2026</span></div></div>
+</div></div>
+    </div>
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+        function toggleLang() {
+            const html = document.getElementById('html-tag');
+            const isHeb = html.getAttribute('dir') === 'rtl';
+            html.setAttribute('dir', isHeb ? 'ltr' : 'rtl');
+            html.setAttribute('lang', isHeb ? 'en' : 'he');
+            document.getElementById('main-title').innerHTML = isHeb ? '<i class="fas fa-globe"></i> Ohad Baram News Dashboard' : '<i class="fas fa-globe"></i> לוח החדשות של אוהד ברעם';
+        }
+        function showCategory(id) {
+            document.querySelectorAll('.news-section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).style.display = 'block';
+            event.currentTarget.classList.add('active');
+        }
+        document.querySelector('.tab-btn').click();
+        if(localStorage.getItem('theme')) document.body.setAttribute('data-theme', localStorage.getItem('theme'));
+    </script>
+</body>
+</html>
