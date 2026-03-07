@@ -2,31 +2,27 @@ name: Update Dashboard
 
 on:
   schedule:
-    - cron: '*/32 * * * *' # רץ כל 32 דקות
-  workflow_dispatch:      # מאפשר הרצה ידנית
+    - cron: '*/32 * * * *'
+  workflow_dispatch:
 
 jobs:
   update:
     runs-on: ubuntu-latest
     permissions:
-      contents: write     # חובה כדי לשמור את הקובץ
-    
+      contents: write
+      
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-
-      - name: Install dependencies
+      
+      - name: Install dependencies and run
         run: |
           pip install -r requirements.txt
-
-      - name: Run news fetcher
-        run: python fetch_news.py
-
+          python fetch_news.py
+      
       - name: Force Commit and Push
         run: |
           git config --global user.email "action@github.com"
