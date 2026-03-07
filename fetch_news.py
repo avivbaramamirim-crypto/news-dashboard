@@ -6,7 +6,7 @@ import re
 import hashlib
 from deep_translator import GoogleTranslator
 
-# 5, 2, 4: גיוון מקורות וסידור תתי-כותרות הגיוניים
+# הגדרת מקורות החדשות עם תתי-נושאים
 RSS_FEEDS = {
     'חדשות ישראל': {
         'חדשות ופוליטיקה': [
@@ -38,7 +38,7 @@ def clean_html(raw_html):
     return clean_text[:300] + '...' if len(clean_text) > 300 else clean_text
 
 def smart_translate(text, is_hebrew_source):
-    """3. תרגום חכם שבודק מה שפת המקור ומתרגם בהתאם"""
+    """תרגום חכם שבודק מה שפת המקור ומתרגם בהתאם"""
     if not text or len(text.strip()) < 2: return text
     try:
         if is_hebrew_source:
@@ -124,7 +124,7 @@ def update_dashboard(news_data):
             content_html += f'<div class="sub-header"><span class="lang-he">{sub_cat}</span><span class="lang-en" style="display:none;">{sub_cat_en}</span></div>\n<div class="news-grid">\n'
             
             for i in items:
-                # 1. התקציר מופיע עכשיו בגוף הכרטיס ולא בטולטיפ
+                # התקציר מופיע עכשיו בגוף הכרטיס ולא בטולטיפ
                 content_html += f"""
                 <div class="card" id="{i['id']}">
                     <div class="card-content">
@@ -156,7 +156,6 @@ def update_dashboard(news_data):
             content_html += '</div>\n'
         content_html += '</div>\n'
 
-    # 7. עיצוב חדשני ומודרני + 6. כותרת חדשה
     html_top = """<!DOCTYPE html>
 <html lang="he" dir="rtl" id="html-tag">
 <head>
@@ -208,4 +207,151 @@ def update_dashboard(news_data):
         .tab-btn { 
             padding: 12px 30px; border: none; background: var(--card); color: var(--text); 
             border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 1.1rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border); font-family: 'Heebo', sans-serif;
+        }
+        .tab-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        
+        .container { max-width: 1400px; margin: auto; padding: 0 20px; }
+        
+        .sub-header { 
+            font-size: 1.8rem; font-weight: 800; margin: 40px 0 20px; 
+            color: var(--text); display: flex; align-items: center; gap: 10px;
+        }
+        .sub-header::before { content: ''; display: block; width: 6px; height: 24px; background: var(--accent); border-radius: 4px; }
+        
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
+        
+        .card { 
+            background: var(--card); backdrop-filter: blur(10px); padding: 25px; 
+            border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow); 
+            transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; 
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-color: var(--accent); }
+        
+        .article-title { color: var(--text); text-decoration: none; font-weight: 800; font-size: 1.3rem; display: block; margin-bottom: 10px; line-height: 1.3; transition: color 0.2s; }
+        .article-title:hover { color: var(--accent); }
+        
+        .article-summary { color: var(--dim); font-size: 1rem; line-height: 1.6; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid var(--border); }
+        .meta { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: var(--dim); font-weight: bold; }
+        .source-tag { background: rgba(99, 102, 241, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 6px; display: inline-block; width: fit-content; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .actions { display: flex; gap: 10px; }
+        .action-btn { 
+            background: var(--bg); border: none; color: var(--dim); width: 40px; height: 40px; 
+            border-radius: 10px; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: 0.2s; text-decoration: none; font-size: 1.1rem;
+        }
+        .action-btn:hover { background: var(--accent); color: white; transform: scale(1.05); }
+        
+        .highlight-card { animation: pulse 2s infinite; border-color: var(--accent); }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
+        
+        [dir="ltr"] { text-align: left; } [dir="rtl"] { text-align: right; }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="nav-bar">
+        <div class="controls">
+            <button class="btn" onclick="toggleTheme()" title="החלף עיצוב"><i class="fas fa-moon"></i></button>
+            <button class="btn" onclick="toggleLang()" id="lang-btn">EN / עב</button>
+        </div>
+        <div id="update-time" style="font-size: 0.9rem; color: var(--dim); font-weight: bold;">
+            <span class="lang-he">עודכן:</span><span class="lang-en" style="display:none;">Updated:</span> """
+
+    html_mid1 = """
+        </div>
+    </div>
+    <div class="hero">
+        <h1 id="main-title">
+            <i class="fas fa-robot"></i> 
+            <span class="lang-he">מדברים בינה - הבית של חובבי ה-AI בישראל</span>
+            <span class="lang-en" style="display:none;">Talking AI - The Home of AI Enthusiasts</span>
+        </h1>
+    </div>
+    <div class="tabs">
+"""
+    
+    html_mid2 = """    </div>
+    <div class="container" id="content-area">
+"""
+    
+    html_bottom = """    </div>
+    
+    <div id="toast" style="visibility: hidden; min-width: 250px; background: var(--accent); color: white; text-align: center; border-radius: 30px; padding: 12px 24px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">
+        הקישור הועתק!
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+        
+        function toggleLang() {
+            const html = document.getElementById('html-tag');
+            const isHeb = html.getAttribute('dir') === 'rtl';
+            
+            html.setAttribute('dir', isHeb ? 'ltr' : 'rtl');
+            html.setAttribute('lang', isHeb ? 'en' : 'he');
+            
+            document.querySelectorAll('.lang-he').forEach(el => el.style.display = isHeb ? 'none' : 'inline-block');
+            document.querySelectorAll('.lang-en').forEach(el => el.style.display = isHeb ? 'inline-block' : 'none');
+            
+            localStorage.setItem('lang', isHeb ? 'en' : 'he');
+        }
+        
+        function showCategory(id) {
+            document.querySelectorAll('.news-section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).style.display = 'block';
+            event.currentTarget.classList.add('active');
+        }
+        
+        function shareLink(articleId) {
+            const url = window.location.href.split('#')[0] + '#' + articleId;
+            navigator.clipboard.writeText(url).then(() => {
+                const toast = document.getElementById("toast");
+                toast.innerHTML = document.getElementById('html-tag').getAttribute('lang') === 'en' ? "Link copied!" : "הקישור הועתק!";
+                toast.style.visibility = "visible";
+                setTimeout(() => { toast.style.visibility = "hidden"; }, 3000);
+            });
+        }
+        
+        document.querySelector('.tab-btn').click();
+        if(localStorage.getItem('theme') === 'light') toggleTheme();
+        if(localStorage.getItem('lang') === 'en') toggleLang();
+        
+        window.onload = () => {
+            const hash = window.location.hash;
+            if (hash) {
+                const targetCard = document.querySelector(hash);
+                if (targetCard) {
+                    const parentSection = targetCard.closest('.news-section');
+                    if(parentSection) {
+                        const tabBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.textContent.trim() === parentSection.id);
+                        if(tabBtn) tabBtn.click();
+                    }
+                    targetCard.classList.add('highlight-card');
+                    setTimeout(() => targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' }), 500);
+                    setTimeout(() => targetCard.classList.remove('highlight-card'), 6000);
+                }
+            }
+        };
+    </script>
+</body>
+</html>"""
+
+    final_html = html_top + update_time + html_mid1 + tabs_html + html_mid2 + content_html + html_bottom
+    
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(final_html)
+
+if __name__ == '__main__':
+    news = fetch_news()
+    update_dashboard(news)
