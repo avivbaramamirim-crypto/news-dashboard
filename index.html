@@ -6,23 +6,44 @@
     <title>לוח החדשות של אוהד ברעם</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --accent: #2563eb; --dim: #64748b; }
-        [data-theme="dark"] { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --dim: #94a3b8; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: background 0.3s, color 0.3s; padding-bottom: 50px; }
+        :root { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --accent: #2563eb; --dim: #64748b; --border: rgba(0,0,0,0.05); }
+        [data-theme="dark"] { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --dim: #94a3b8; --border: rgba(255,255,255,0.05); }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: 0.3s; padding-bottom: 50px; scroll-behavior: smooth; }
         .nav-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card); box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
         .controls { display: flex; gap: 10px; }
         .btn { background: var(--bg); border: 1px solid var(--dim); color: var(--text); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         .hero { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, var(--accent), #1d4ed8); color: white; }
-        .weather-widget { margin-top: 15px; font-size: 1.1rem; background: rgba(255,255,255,0.1); display: inline-block; padding: 10px 20px; border-radius: 50px; backdrop-filter: blur(5px); }
         .tabs { display: flex; justify-content: center; gap: 10px; margin: 20px 0; padding: 0 10px; flex-wrap: wrap; }
         .tab-btn { padding: 10px 25px; border: none; background: var(--card); color: var(--text); border-radius: 25px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .tab-btn.active { background: var(--accent); color: white; }
-        .container { max-width: 1100px; margin: auto; padding: 0 15px; }
-        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
-        .card a { color: var(--text); text-decoration: none; font-weight: bold; font-size: 1.1rem; display: block; margin-bottom: 15px; line-height: 1.4; }
-        .card .meta { font-size: 0.8rem; color: var(--dim); display: flex; justify-content: space-between; align-items: center; }
-        .card .source-tag { background: rgba(37, 99, 235, 0.1); color: var(--accent); padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .tab-btn.active { background: var(--accent); color: white; transform: scale(1.05); }
+        .container { max-width: 1200px; margin: auto; padding: 0 15px; }
+        
+        .sub-header { font-size: 1.5rem; font-weight: bold; margin: 30px 0 15px; border-bottom: 2px solid var(--accent); padding-bottom: 5px; color: var(--accent); }
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        
+        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+        .card:hover { transform: translateY(-3px); border-color: var(--accent); }
+        .article-title { color: var(--text); text-decoration: none; font-weight: bold; font-size: 1.15rem; display: block; margin-bottom: 15px; line-height: 1.4; }
+        
+        /* Tooltip CSS */
+        .tooltip { position: relative; display: block; }
+        .tooltip .tooltiptext { visibility: hidden; width: 280px; background-color: var(--card); color: var(--text); border: 1px solid var(--accent); text-align: right; border-radius: 8px; padding: 12px; position: absolute; z-index: 10; bottom: 110%; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-size: 0.9rem; font-weight: normal; line-height: 1.5; pointer-events: none; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: var(--accent) transparent transparent transparent; }
+        [dir="ltr"] .tooltip .tooltiptext { text-align: left; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; pointer-events: auto; }
+        
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); }
+        .meta { display: flex; flex-direction: column; gap: 5px; font-size: 0.8rem; color: var(--dim); }
+        .source-tag { background: rgba(37, 99, 235, 0.1); color: var(--accent); padding: 4px 8px; border-radius: 4px; font-weight: bold; display: inline-block; width: fit-content; }
+        
+        .actions { display: flex; gap: 8px; }
+        .action-btn { background: var(--bg); border: 1px solid var(--border); color: var(--text); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; text-decoration: none; font-size: 1rem; }
+        .action-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        
+        /* Highlight specific article if linked */
+        .highlight-card { animation: pulse 2s infinite; border-color: var(--accent); }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
+        
         [dir="ltr"] { text-align: left; } [dir="rtl"] { text-align: right; }
     </style>
 </head>
@@ -30,64 +51,916 @@
     <div class="nav-bar">
         <div class="controls">
             <button class="btn" onclick="toggleTheme()" title="החלף עיצוב"><i class="fas fa-moon"></i></button>
-            <button class="btn" onclick="toggleLang()">EN / עב</button>
+            <button class="btn" onclick="toggleLang()" id="lang-btn">EN / עב</button>
         </div>
-        <div id="update-time" style="font-size: 0.85rem; color: var(--dim); font-weight: bold;">עודכן: 07/03/2026 09:19</div>
+        <div id="update-time" style="font-size: 0.85rem; color: var(--dim); font-weight: bold;">
+            <span class="lang-he">עודכן:</span><span class="lang-en" style="display:none;">Updated:</span> {update_time}
+        </div>
     </div>
     <div class="hero">
-        <h1 id="main-title"><i class="fas fa-globe"></i> לוח החדשות של אוהד ברעם</h1>
-        <div class="weather-widget" id="weather">ישראל: 22°C | בהיר <i class="fas fa-sun"></i></div>
+        <h1 id="main-title">
+            <i class="fas fa-globe"></i> 
+            <span class="lang-he">לוח החדשות של אוהד ברעם</span>
+            <span class="lang-en" style="display:none;">Ohad Baram's News Dashboard</span>
+        </h1>
     </div>
     <div class="tabs">
 <button class="tab-btn" onclick="showCategory('ישראל')">ישראל</button>
 <button class="tab-btn" onclick="showCategory('AI וטכנולוגיה')">AI וטכנולוגיה</button>
     </div>
     <div class="container" id="content-area">
-<div id="ישראל" class="news-section" style="display:none"><div class="news-grid">
-<div class="card"><a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE9fTUtIQWljWHdsU216ZmZLSlVlWFVvd09OeUxSMnFHS3lRUHVRNzRKQmRUR3hxd2JHZWpzcWpnWFMzY2xJU3hrQkhOUGIzR050clhUVWdOS1N3MHFZemZCSk9XeS0?oc=5" target="_blank">יפה לנו: מדינת ישראל דואגת לאיראנים יותר מאשר לאזרחיה שלה | ליאת רון - מעריב</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Sat, 07 Mar 2026</span></div></div>
-<div class="card"><a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxQUEQxMEtpSWl6ODNPeHU5TnZBQ0U3QVFKN2VkSHo5djg0bm1sdU51TmhxMTQ4NThDTGdrYjUwa0Z3Z3dHZVk2WENrd1ZveWYtMXVzN1lCVHdITUpyTlJYdmpqQU55S0tSOWMwLTB0X2FZdjVua0phRmZMbFA2MkZ5blRtdG5RSWkxTUxNa1JObVhWSlNjRFFwWlJFQS1WVWZJODF6dHNqZFJ4d3hJbktDZzR5OA?oc=5" target="_blank">באמריקה הלטינית מאשימים היום את ישראל בהכל. אפילו במשבר האקלים - הארץ</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Thu, 05 Mar 2026</span></div></div>
-<div class="card"><a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE9Ldk5SQnJwaEJoc3FxMGgwZ2l2a0RtdW5tWEFlR0JJWEphcUJsRFJMUlJGV1RkOC1pMDk5aGtKcEtGWFptSU4xeFc3RkQxT0VKd0hzdkJuRGFVWFE?oc=5" target="_blank">"המטרה – ישראל תחזור כמעט לשגרה תוך ימים, ואנחנו נמשיך לכתוש באיראן" - ynet</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Thu, 05 Mar 2026</span></div></div>
-<div class="card"><a href="https://news.google.com/rss/articles/CBMia0FVX3lxTFBfeVVmMW9fck0yWF9DQm11MXhMWHNraUlVTHVXMGRsYU10RzQtT2IwYTd2ckJVWG80OTJwZGZlWElsOVh5LVgzN1UwWUplRDlJNUdIYzRsMklQdDdrYUU1S0Z3ckRBdDludzhn?oc=5" target="_blank">ג'יי.פי.מורגן: הפגיעה בכלכלה הישראלית בעקבות המלחמה תהיה מוגבלת, והיא תתאושש במהירות - Calcalist</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTFA5OU9ja1ZjcWQ2NzZMSEFobTVXSHpsU2hHYnJqTEQ4WUcxeWZBN3ZXZWZWRmFEU09OdVNhajNETkZpNEdMSjVVbHlvbVdqXzVVZWc5OG1Qb2piWTlxNkVlMHNHV3VCZw?oc=5" target="_blank">דיווח: ישראל תוקפת במערב איראן - כדי לעודד כוחות כורדיים להשתלט על שטחים בגבול עם עיראק - כאן 11</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Sat, 07 Mar 2026</span></div></div>
-<div class="card"><a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTFBzWDNsT3dMTmF5UDRjazdnYmM4UnZ1ZkFvT2tfb3IyemVhVjFHcjFCMnVhaUtaVElHQXZQbjA3dlFMbUloTW5EM3lXemRzS3R0NGprSWRhZ3NIRUhhLW9oRkxTS25QZlUt?oc=5" target="_blank">גבירותיי ורבותיי, מהפך: בבוקר שאחרי 7 באוקטובר קמה כאן ישראל אחרת - מקור ראשון</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://news.google.com/rss/articles/CBMiREFVX3lxTE0zaEJydUI0SGwzMGItRmd5SWNjc0ZiUElNek1ueVU1eUd1OTRaQXNBaVB6RlFtaWN2bnp6VzFoZDJqMnc4?oc=5" target="_blank">פנחס ענברי: טראמפ רוצה לשנות את איראן, נתניהו רוצה לשנות את ישראל - זמן ישראל</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxPTUlfS0I4cFk4ZHBpYmE3X2F4ekxMc0lQclNaTWRnN2NEQU1zNkZLMlJTc2tMSDNFcmRCWWk2eTBOQUZSZ2E4aWRaaEVEQkw1MHdnR1VjY2pBOVdoaF8yS19tQkxyY3ZPQlc0Q0xjQU5IMFNrQ0tRZFJ5Uy1kVkUxaTJOeE1KUDdiWFdlSXUtMjN3emhHLTZjNFNmQTB0di03YmNiX2NlUXZOeEU?oc=5" target="_blank">לאחר תקיפות איראן, קפריסין מבינה את מחיר הברית עם ישראל - הארץ</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Thu, 05 Mar 2026</span></div></div>
-<div class="card"><a href="https://news.google.com/rss/articles/CBMihgFBVV95cUxQVUF3YmcwT0VOZEZHWFl6WmJ0TDhCYmVwUFUwb0hFSUpTUDJVTEhlSjdFeVdVUjRDOEVSSDFZbTk1S0liajJsYXl0ZU85Z3p3ZHVNVVNTQlE5UGZEU1NaOWRocWZHeENEaGpjUTZxUG5XUW01bnN5TGJoS0FIaUx6cHV0d1k5UQ?oc=5" target="_blank">הכנסיה האוונגליסטית המרכזית בפנמה במפגן הזדהות הבוקר עם ישראל וארה"ב - mako</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://news.google.com/rss/articles/CBMipwFBVV95cUxQRGJXZkp3VkZ4WDhETGtSbTl4b0MtY253MlNCdno2ZlNUT3NteUcyTnE2Ymt1ZVRyQ2tkeHVocnZhbHFzblI4bzdEWDZINWdLbFF6TkdQdmRnb2VFUjgwZGdkV1BPVFRrc2ZBWlRVNnJXVUE0Wl9FUG1Uc0E1aEdEYTdQTVA2OXc1amxxMTlyX1cySlp4Q1F3VWhUejhXZlZvZ096eDdKUQ?oc=5" target="_blank">ג'יי.פי מורגן: פגיעת המלחמה בכלכלת ישראל תהיה מוגבלת וקצרת־מועד - TheMarker</a><div class="meta"><span class="source-tag">Google News Israel</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.ynet.co.il/news/article/by0050eyy11e" target="_blank">בעיטות, אגרופים ו"הווירוס הפרוגרסיבי": אלימות ב"טקס זיכרון לחמינאי" בניו יורק</a><div class="meta"><span class="source-tag">ynet</span><span>Sat, 07 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.ynet.co.il/news/article/hyakpp00kwe" target="_blank">ההתרעות המקדימות הקצרות לפני האזעקות אמש, וההסברים האפשריים</a><div class="meta"><span class="source-tag">ynet</span><span>Sat, 07 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.ynet.co.il/news/article/by3lemfkwx" target="_blank">דיווחים בלבנון: "מסוקים הנחיתו כוחות קומנדו - בניסיון לאיתור רון ארד"</a><div class="meta"><span class="source-tag">ynet</span><span>Sat, 07 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.ynet.co.il/news/article/o24dt731e" target="_blank">גשם מהצפון ועד צפון הנגב | התחזית - והמכ"ם</a><div class="meta"><span class="source-tag">ynet</span><span>Sat, 07 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.ynet.co.il/news/article/r1kbh68kbe" target="_blank">מתי הכי כדאי להתקלח? נתוני האזעקות המלאים - בכל יישוב ויישוב</a><div class="meta"><span class="source-tag">ynet</span><span>Sat, 07 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.ynet.co.il/news/article/hkpo8fufbg" target="_blank">המלחמה כולה עטופה בסמליות היסטורית</a><div class="meta"><span class="source-tag">ynet</span><span>Sat, 07 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.ynet.co.il/news/article/byxmuykt11x" target="_blank">"טראמפ שוקל פעולה קרקעית": התרחיש שמדאיג את וושינגטון והפתרון שעל הפרק</a><div class="meta"><span class="source-tag">ynet</span><span>Sat, 07 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.ynet.co.il/news/article/ryr0wsuybx" target="_blank">איש הצללים ש"צותת לטלפון של אבא", סומן כיורש - ונעלם: זה חמינאי הבן, שעל הכוונת הישראלית</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.ynet.co.il/news/article/rkvwxhdyzl" target="_blank">חיזבאללה התכונן למלחמת "איום קיומי"</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.ynet.co.il/news/article/hj8eisdkwl" target="_blank">טראמפ רוצה "מודל ונצואלה" באיראן, אבל בטהרן אין דלסי רודריגז</a><div class="meta"><span class="source-tag">ynet</span><span>Fri, 06 Mar 2026</span></div></div>
-</div></div>
-<div id="AI וטכנולוגיה" class="news-section" style="display:none"><div class="news-grid">
-<div class="card"><a href="https://www.artificialintelligence-news.com/news/scaling-intelligent-automation-without-breaking-live-workflows/" target="_blank">Scaling intelligent automation without breaking live workflows</a><div class="meta"><span class="source-tag">AI News</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.artificialintelligence-news.com/news/rowspace-50m-ai-private-equity-sequoia-emergence/" target="_blank">The firm that never forgets: Rowspace launches with $50M to make AI for private equity actually work</a><div class="meta"><span class="source-tag">AI News</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.artificialintelligence-news.com/news/jpmorgan-expands-ai-investment/" target="_blank">JPMorgan expands AI investment as tech spending nears $20B</a><div class="meta"><span class="source-tag">AI News</span><span>Thu, 05 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.artificialintelligence-news.com/news/dyna-ai-series-a-agentic-ai-financial-services/" target="_blank">Beyond the pilot: Dyna.Ai raises eight-figure Series A to put agentic AI in financial services to work</a><div class="meta"><span class="source-tag">AI News</span><span>Thu, 05 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.artificialintelligence-news.com/news/physical-ai-global-race-robots-manufacturing-2026/" target="_blank">Physical AI is having its moment–and everyone wants a piece of it</a><div class="meta"><span class="source-tag">AI News</span><span>Wed, 04 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.artificialintelligence-news.com/news/ai-agents-prefer-bitcoin-new-finance-architecture/" target="_blank">AI agents prefer Bitcoin shaping new finance architecture</a><div class="meta"><span class="source-tag">AI News</span><span>Wed, 04 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.artificialintelligence-news.com/news/google-industrial-robotics-ai-physical-ai-intrinsic/" target="_blank">Google makes its industrial robotics AI play official–and this time, it means business</a><div class="meta"><span class="source-tag">AI News</span><span>Wed, 04 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.artificialintelligence-news.com/news/best-ai-security-solutions-2026-top-enterprise-platforms-compared/" target="_blank">Best AI security solutions 2026: Top enterprise platforms compared</a><div class="meta"><span class="source-tag">AI News</span><span>Tue, 03 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.artificialintelligence-news.com/news/the-integration-of-ai-in-modern-forex-automation/" target="_blank">The integration of AI in modern forex automation</a><div class="meta"><span class="source-tag">AI News</span><span>Tue, 03 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.artificialintelligence-news.com/news/physical-ai-adoption-boosts-customer-service-roi/" target="_blank">Physical AI adoption boosts customer service ROI</a><div class="meta"><span class="source-tag">AI News</span><span>Tue, 03 Mar 2026</span></div></div>
-<div class="card"><a href="https://plasma-bigscreen.org" target="_blank">Plasma Bigscreen – 10-foot interface for KDE plasma</a><div class="meta"><span class="source-tag">Hacker News</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://github.com/golang/go/issues/62026" target="_blank">UUID package coming to Go standard library</a><div class="meta"><span class="source-tag">Hacker News</span><span>Sat, 07 Mar 2026</span></div></div>
-<div class="card"><a href="https://will-keleher.com/posts/this-css-makes-me-human/" target="_blank">this css proves me human</a><div class="meta"><span class="source-tag">Hacker News</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://dynomight.net/pattern/" target="_blank">Maybe there's a pattern here?</a><div class="meta"><span class="source-tag">Hacker News</span><span>Thu, 05 Mar 2026</span></div></div>
-<div class="card"><a href="https://blog.katanaquant.com/p/your-llm-doesnt-write-correct-code" target="_blank">LLMs work best when the user defines their acceptance criteria first</a><div class="meta"><span class="source-tag">Hacker News</span><span>Sat, 07 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.science.org/content/article/galileo-s-handwritten-notes-found-ancient-astronomy-text" target="_blank">Galileo's handwritten notes found in ancient astronomy text</a><div class="meta"><span class="source-tag">Hacker News</span><span>Thu, 05 Mar 2026</span></div></div>
-<div class="card"><a href="https://www.cluetrain.com/book/longing.html" target="_blank">The Longing (1999)</a><div class="meta"><span class="source-tag">Hacker News</span><span>Tue, 03 Mar 2026</span></div></div>
-<div class="card"><a href="https://github.com/moongate-community/moongatev2" target="_blank">Show HN: Moongate – Ultima Online server emulator in .NET 10 with Lua scripting</a><div class="meta"><span class="source-tag">Hacker News</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://helix-editor.com/" target="_blank">Helix: A post-modern text editor</a><div class="meta"><span class="source-tag">Hacker News</span><span>Fri, 06 Mar 2026</span></div></div>
-<div class="card"><a href="https://vickiboykis.com/2026/02/21/querying-3-billion-vectors/" target="_blank">Querying 3B Vectors</a><div class="meta"><span class="source-tag">Hacker News</span><span>Tue, 03 Mar 2026</span></div></div>
-</div></div>
+<div id="ישראל" class="news-section" style="display:none">
+<div class="sub-header"><span class="lang-he">חדשות ופוליטיקה</span><span class="lang-en" style="display:none;">News and politics</span></div>
+<div class="news-grid">
+
+                <div class="card" id="article_ce553669">
+                    <div class="tooltip">
+                        <a href="https://news.google.com/rss/articles/CBMifEFVX3lxTE9PWkFIUmlEdGxSalIyYzhSMmRpcWhMbzNsb3N1dzlVZEE0djNwYVVlVjZCcGwtWW1qb3lYeWphc05uV3NZN28yMWFSSlNLRWhNU2trRkRvLXJfN1dWSVlFR252WFBoeTBYcnBqeTA4d3dodnE2bE96eFBrUWg?oc=5" target="_blank" class="article-title">
+                            <span class="lang-he">דיווח ברויטרס: ישראל תוקפת באיראן כדי לסייע למיליציות הכורדיות - mako</span>
+                            <span class="lang-en" style="display:none;">Reuters report: Israel attacks Iran to help the Kurdish militias - mako</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">דיווח ברויטרס: ישראל תוקפת באיראן כדי לסייע למיליציות הכורדיות&nbsp;&nbsp;mako</span>
+                            <span class="lang-en" style="display:none;">Reuters report: Israel is attacking Iran to help the Kurdish militias</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Google News Israel</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_ce553669')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://news.google.com/rss/articles/CBMifEFVX3lxTE9PWkFIUmlEdGxSalIyYzhSMmRpcWhMbzNsb3N1dzlVZEE0djNwYVVlVjZCcGwtWW1qb3lYeWphc05uV3NZN28yMWFSSlNLRWhNU2trRkRvLXJfN1dWSVlFR252WFBoeTBYcnBqeTA4d3dodnE2bE96eFBrUWg?oc=5" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_37ed2d77">
+                    <div class="tooltip">
+                        <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE5meGw1ajNwemNYWDdNczd0ZUxJR1BxcWtVUzNKWUVYeVRNVGFxQkZERFZBaU5HYTRnWFRpblpPSGJhMzFQLTB0RVlEWUhwS3ZTcUNMMWNUMGpSZFdPc05KZGV1Ym8?oc=5" target="_blank" class="article-title">
+                            <span class="lang-he">בלבנון מזהים: שינוי חד באסטרטגיה של ישראל נגד חיזבאללה - מעריב</span>
+                            <span class="lang-en" style="display:none;">In Lebanon, they recognize: a sharp change in Israel's strategy against Hezbollah - Maariv</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">בלבנון מזהים: שינוי חד באסטרטגיה של ישראל נגד חיזבאללה&nbsp;&nbsp;מעריב</span>
+                            <span class="lang-en" style="display:none;">In Lebanon they recognize: a sharp change in Israel's strategy against Hezbollah&nbsp;&nbsp;Maariv</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Google News Israel</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_37ed2d77')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE5meGw1ajNwemNYWDdNczd0ZUxJR1BxcWtVUzNKWUVYeVRNVGFxQkZERFZBaU5HYTRnWFRpblpPSGJhMzFQLTB0RVlEWUhwS3ZTcUNMMWNUMGpSZFdPc05KZGV1Ym8?oc=5" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_d5618f46">
+                    <div class="tooltip">
+                        <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE5ReVJhUWNrVjUwUE56T0xfV0kwdjdHZWRzeXNnWlZBRWd6Q2lJRDg3SkJ3eFFMcTZON1lXSTN4dDQ5Rkt5Sk9oY0pTSDk4WkZGYzlkM3BXWFFQUQ?oc=5" target="_blank" class="article-title">
+                            <span class="lang-he">בעסקת ענק: ישראל תקבל 27 אלף פצצות אמריקניות - שמייצרת חברה טורקית - ynet</span>
+                            <span class="lang-en" style="display:none;">In a huge deal: Israel will receive 27 thousand American bombs - produced by a Turkish company - ynet</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">בעסקת ענק: ישראל תקבל 27 אלף פצצות אמריקניות - שמייצרת חברה טורקית&nbsp;&nbsp;ynet</span>
+                            <span class="lang-en" style="display:none;">In a huge deal: Israel will receive 27 thousand American bombs - produced by a Turkish company&nbsp;&nbsp;ynet</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Google News Israel</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_d5618f46')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE5ReVJhUWNrVjUwUE56T0xfV0kwdjdHZWRzeXNnWlZBRWd6Q2lJRDg3SkJ3eFFMcTZON1lXSTN4dDQ5Rkt5Sk9oY0pTSDk4WkZGYzlkM3BXWFFQUQ?oc=5" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_c5a8489e">
+                    <div class="tooltip">
+                        <a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE56X1llYkoxUDZwYzVpU1JXeHl4czhhRms5Y21lVVlWb3laSHhtRl82cDk2WVlBZEdFLVNnWTZVZ3Rkblg2T2xKSmtpcExDZXdmaGNyZ1ZRUG1XQXlDSXNjMGwxYW1DUQ?oc=5" target="_blank" class="article-title">
+                            <span class="lang-he">צינור החמצן הכספי של איראן נחתך - והטמטום המתגלגל בזירה המקומית שובר שיאים | ליאת רון - מעריב</span>
+                            <span class="lang-en" style="display:none;">Iran's mercury oxygen pipeline has been cut - and the idiocy unfolding in the local arena is breaking records Liat Ron - Maariv</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">צינור החמצן הכספי של איראן נחתך - והטמטום המתגלגל בזירה המקומית שובר שיאים | ליאת רון&nbsp;&nbsp;מעריב</span>
+                            <span class="lang-en" style="display:none;">Iran's mercury oxygen pipeline has been cut - and the idiocy unfolding in the local arena is breaking records Liat Ron&nbsp;&nbsp;Maariv</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Google News Israel</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_c5a8489e')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE56X1llYkoxUDZwYzVpU1JXeHl4czhhRms5Y21lVVlWb3laSHhtRl82cDk2WVlBZEdFLVNnWTZVZ3Rkblg2T2xKSmtpcExDZXdmaGNyZ1ZRUG1XQXlDSXNjMGwxYW1DUQ?oc=5" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_b68904d9">
+                    <div class="tooltip">
+                        <a href="https://news.google.com/rss/articles/CBMia0FVX3lxTFBfeVVmMW9fck0yWF9DQm11MXhMWHNraUlVTHVXMGRsYU10RzQtT2IwYTd2ckJVWG80OTJwZGZlWElsOVh5LVgzN1UwWUplRDlJNUdIYzRsMklQdDdrYUU1S0Z3ckRBdDludzhn?oc=5" target="_blank" class="article-title">
+                            <span class="lang-he">ג'יי.פי.מורגן: הפגיעה בכלכלה הישראלית בעקבות המלחמה תהיה מוגבלת, והיא תתאושש במהירות - Calcalist</span>
+                            <span class="lang-en" style="display:none;">JP Morgan: The damage to the Israeli economy following the war will be limited, and it will recover quickly - Calcalist</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">ג&#39;יי.פי.מורגן: הפגיעה בכלכלה הישראלית בעקבות המלחמה תהיה מוגבלת, והיא תתאושש במהירות&nbsp;&nbsp;Calcalist</span>
+                            <span class="lang-en" style="display:none;">JP Morgan: The damage to the Israeli economy following the war will be limited, and it will recover quickly&nbsp;&nbsp;Calcalist</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Google News Israel</span>
+                            <span class="time-tag">Fri, 06 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_b68904d9')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://news.google.com/rss/articles/CBMia0FVX3lxTFBfeVVmMW9fck0yWF9DQm11MXhMWHNraUlVTHVXMGRsYU10RzQtT2IwYTd2ckJVWG80OTJwZGZlWElsOVh5LVgzN1UwWUplRDlJNUdIYzRsMklQdDdrYUU1S0Z3ckRBdDludzhn?oc=5" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_fc50de45">
+                    <div class="tooltip">
+                        <a href="https://news.google.com/rss/articles/CBMirgRBVV95cUxOQ01NX0NUQndiTmVMckJwRWh1RDdCVTZhRkkxN2YxV2pNb19XS3hCVmQtODk5Tm9tMGNCMkg5ay1ZOGRocmF5MEl6V2w1MWV0NkxjaHppTnQ0U0V2RmNkRGprd2lOR2RKUlV3VFlKN1lfMzdseWlnSmVjMzlFTFFrZUI4OXhRX2VWZ3d3RGZFeXg5cGdFbGNIbV8yWGtMSDBBc0JmNFZrX3VZQUFTV1VHMHJkdlBPZENvWUxMSjdBVkc2Tlp2cDI5ZktqYnA2OWVzeURERjZwQ0Z2VUM3N1ZKdkIwSDZQdUVLbEJDTEpoTFFtWFVLamh2QUxTd0p1NXJUeEs5NjNTY2hhUGhNZUgzSms5clFuTGpnU09yZUxUSmdtYzE4b0dNYlhMSkZjRmZNREN4TjdFV3A5M0ZaR29aV2V3SS1XM0ZyZndERWc5TkVmVEFKQ1Fid04xVW5VZm10Y0czbTNOTno2MDRRMERiNkkwQlNhbW8teTdBakVFTlNVYi1nR2Z1cXBKNnk3VWFkSEVrTk9EXzluLXNQMlJRTHN5TUtETXZ2RWEyYnozUTFNMVhzYmxmTkFyNmdJQWl4NFFhLTFCVFpoWWM3TTdVN21VUFJYQWF0MWV0eGhQeXE0Y2dRaU95Q3E4YjJsdmdmZndKUWNXM2g2cTcxQ2FCWU5Ga1R4V2taV3FXS2ZZbjI0NThBejMxNGt0Nk1xRDI0OFpTS2h2Ynl4Y1hUeGc?oc=5" target="_blank" class="article-title">
+                            <span class="lang-he">06.03, 15:15: צפו בעדכון דובר צה"ל - idf.il</span>
+                            <span class="lang-en" style="display:none;">06.03, 15:15: Watch the IDF spokesman's update - idf.il</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">06.03, 15:15: צפו בעדכון דובר צה&quot;ל&nbsp;&nbsp;idf.il</span>
+                            <span class="lang-en" style="display:none;">03.06, 3:15 p.m.: Watch the IDF spokesman's update on idf.il</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Google News Israel</span>
+                            <span class="time-tag">Fri, 06 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_fc50de45')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://news.google.com/rss/articles/CBMirgRBVV95cUxOQ01NX0NUQndiTmVMckJwRWh1RDdCVTZhRkkxN2YxV2pNb19XS3hCVmQtODk5Tm9tMGNCMkg5ay1ZOGRocmF5MEl6V2w1MWV0NkxjaHppTnQ0U0V2RmNkRGprd2lOR2RKUlV3VFlKN1lfMzdseWlnSmVjMzlFTFFrZUI4OXhRX2VWZ3d3RGZFeXg5cGdFbGNIbV8yWGtMSDBBc0JmNFZrX3VZQUFTV1VHMHJkdlBPZENvWUxMSjdBVkc2Tlp2cDI5ZktqYnA2OWVzeURERjZwQ0Z2VUM3N1ZKdkIwSDZQdUVLbEJDTEpoTFFtWFVLamh2QUxTd0p1NXJUeEs5NjNTY2hhUGhNZUgzSms5clFuTGpnU09yZUxUSmdtYzE4b0dNYlhMSkZjRmZNREN4TjdFV3A5M0ZaR29aV2V3SS1XM0ZyZndERWc5TkVmVEFKQ1Fid04xVW5VZm10Y0czbTNOTno2MDRRMERiNkkwQlNhbW8teTdBakVFTlNVYi1nR2Z1cXBKNnk3VWFkSEVrTk9EXzluLXNQMlJRTHN5TUtETXZ2RWEyYnozUTFNMVhzYmxmTkFyNmdJQWl4NFFhLTFCVFpoWWM3TTdVN21VUFJYQWF0MWV0eGhQeXE0Y2dRaU95Q3E4YjJsdmdmZndKUWNXM2g2cTcxQ2FCWU5Ga1R4V2taV3FXS2ZZbjI0NThBejMxNGt0Nk1xRDI0OFpTS2h2Ynl4Y1hUeGc?oc=5" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_bbbc2c5a">
+                    <div class="tooltip">
+                        <a href="https://news.google.com/rss/articles/CBMiREFVX3lxTE0zaEJydUI0SGwzMGItRmd5SWNjc0ZiUElNek1ueVU1eUd1OTRaQXNBaVB6RlFtaWN2bnp6VzFoZDJqMnc4?oc=5" target="_blank" class="article-title">
+                            <span class="lang-he">פנחס ענברי: טראמפ רוצה לשנות את איראן, נתניהו רוצה לשנות את ישראל - זמן ישראל</span>
+                            <span class="lang-en" style="display:none;">Pinchas Inbari: Trump wants to change Iran, Netanyahu wants to change Israel - Zeman Israel</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">פנחס ענברי: טראמפ רוצה לשנות את איראן, נתניהו רוצה לשנות את ישראל&nbsp;&nbsp;זמן ישראל</span>
+                            <span class="lang-en" style="display:none;">Pinchas Inbari: Trump wants to change Iran, Netanyahu wants to change Israel&nbsp;&nbsp;Zman Israel</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Google News Israel</span>
+                            <span class="time-tag">Fri, 06 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_bbbc2c5a')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://news.google.com/rss/articles/CBMiREFVX3lxTE0zaEJydUI0SGwzMGItRmd5SWNjc0ZiUElNek1ueVU1eUd1OTRaQXNBaVB6RlFtaWN2bnp6VzFoZDJqMnc4?oc=5" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_d9d1e5c5">
+                    <div class="tooltip">
+                        <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTFBzWDNsT3dMTmF5UDRjazdnYmM4UnZ1ZkFvT2tfb3IyemVhVjFHcjFCMnVhaUtaVElHQXZQbjA3dlFMbUloTW5EM3lXemRzS3R0NGprSWRhZ3NIRUhhLW9oRkxTS25QZlUt?oc=5" target="_blank" class="article-title">
+                            <span class="lang-he">גבירותיי ורבותיי, מהפך: בבוקר שאחרי 7 באוקטובר קמה כאן ישראל אחרת - מקור ראשון</span>
+                            <span class="lang-en" style="display:none;">Ladies and gentlemen, a transformation: on the morning after October 7, a different Israel arose here - first source</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">גבירותיי ורבותיי, מהפך: בבוקר שאחרי 7 באוקטובר קמה כאן ישראל אחרת&nbsp;&nbsp;מקור ראשון</span>
+                            <span class="lang-en" style="display:none;">Ladies and gentlemen, a transformation: on the morning after October 7, a different Israel arose here&nbsp;&nbsp; First source</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Google News Israel</span>
+                            <span class="time-tag">Fri, 06 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_d9d1e5c5')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTFBzWDNsT3dMTmF5UDRjazdnYmM4UnZ1ZkFvT2tfb3IyemVhVjFHcjFCMnVhaUtaVElHQXZQbjA3dlFMbUloTW5EM3lXemRzS3R0NGprSWRhZ3NIRUhhLW9oRkxTS25QZlUt?oc=5" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_7be81dd8">
+                    <div class="tooltip">
+                        <a href="https://news.google.com/rss/articles/CBMiTkFVX3lxTE1FdktaVGxPZk12dzJGWGRRd2N2ZXg4MHVnU2pEUi1ncmxvbWpnbG1ad1RVQmc5NFBZNmJQNjl4a2w0aTFuaXJOU1hReGsxUQ?oc=5" target="_blank" class="article-title">
+                            <span class="lang-he">לילה של אש בלי הפסקה: ישראל הבעירה את המזרח התיכון - סרוגים</span>
+                            <span class="lang-en" style="display:none;">A night of non-stop fire: Israel set fire to the Middle East - knitted</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">לילה של אש בלי הפסקה: ישראל הבעירה את המזרח התיכון&nbsp;&nbsp;סרוגים</span>
+                            <span class="lang-en" style="display:none;">A night of non-stop fire: Israel set the Middle East on fire</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Google News Israel</span>
+                            <span class="time-tag">Fri, 06 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_7be81dd8')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://news.google.com/rss/articles/CBMiTkFVX3lxTE1FdktaVGxPZk12dzJGWGRRd2N2ZXg4MHVnU2pEUi1ncmxvbWpnbG1ad1RVQmc5NFBZNmJQNjl4a2w0aTFuaXJOU1hReGsxUQ?oc=5" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_146b199c">
+                    <div class="tooltip">
+                        <a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxQUEQxMEtpSWl6ODNPeHU5TnZBQ0U3QVFKN2VkSHo5djg0bm1sdU51TmhxMTQ4NThDTGdrYjUwa0Z3Z3dHZVk2WENrd1ZveWYtMXVzN1lCVHdITUpyTlJYdmpqQU55S0tSOWMwLTB0X2FZdjVua0phRmZMbFA2MkZ5blRtdG5RSWkxTUxNa1JObVhWSlNjRFFwWlJFQS1WVWZJODF6dHNqZFJ4d3hJbktDZzR5OA?oc=5" target="_blank" class="article-title">
+                            <span class="lang-he">באמריקה הלטינית מאשימים היום את ישראל בהכל. אפילו במשבר האקלים - הארץ</span>
+                            <span class="lang-en" style="display:none;">In Latin America today Israel is blamed for everything. Even in the climate crisis - Haaretz</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">באמריקה הלטינית מאשימים היום את ישראל בהכל. אפילו במשבר האקלים&nbsp;&nbsp;הארץ</span>
+                            <span class="lang-en" style="display:none;">In Latin America today Israel is blamed for everything. Even in the country's climate crisis</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Google News Israel</span>
+                            <span class="time-tag">Thu, 05 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_146b199c')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxQUEQxMEtpSWl6ODNPeHU5TnZBQ0U3QVFKN2VkSHo5djg0bm1sdU51TmhxMTQ4NThDTGdrYjUwa0Z3Z3dHZVk2WENrd1ZveWYtMXVzN1lCVHdITUpyTlJYdmpqQU55S0tSOWMwLTB0X2FZdjVua0phRmZMbFA2MkZ5blRtdG5RSWkxTUxNa1JObVhWSlNjRFFwWlJFQS1WVWZJODF6dHNqZFJ4d3hJbktDZzR5OA?oc=5" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+</div>
+<div class="sub-header"><span class="lang-he">מבזקים שוטפים</span><span class="lang-en" style="display:none;">Frequent flashes</span></div>
+<div class="news-grid">
+
+                <div class="card" id="article_43e71e87">
+                    <div class="tooltip">
+                        <a href="https://www.ynet.co.il/news/article/rkl6vttf11e" target="_blank" class="article-title">
+                            <span class="lang-he">ירי על מחסום חמאס ומרדף לילי: פעילות המיליציות מתרחבת לצפון רצועת עזה</span>
+                            <span class="lang-en" style="display:none;">Shooting at the Hamas checkpoint and a night chase: the militias' activity expands to the north of the Gaza Strip</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">עיתון סעודי דיווח על פעילות חמושים הכפופים לאשרף אל-מנסי, קצין לשעבר ברשות שמוכר בג&#39;באליה ובית לאהיה. הם ירו על כוח חמאס בשכונת נסר בעזה ונמלטו. למחרת ירו על סיור של הארגון, והפעם אחד מהם נעצר. רא...</span>
+                            <span class="lang-en" style="display:none;">A Saudi newspaper reported on the activities of militants subordinate to Ashraf al-Mansi, a former PA officer who is known in Bali and Beit Lahia. They shot at Hamas forces in the Nasr neighborhood in Gaza and escaped. The next day they shot at a patrol of the organization, and this time one of them was arrested. Ra...</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">ynet</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_43e71e87')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://www.ynet.co.il/news/article/rkl6vttf11e" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_e3a01fb2">
+                    <div class="tooltip">
+                        <a href="https://www.ynet.co.il/news/article/b1s9fykkwg" target="_blank" class="article-title">
+                            <span class="lang-he">תמי ארד פונה לנתניהו: "אל תסכן לוחמים כדי להשיב עצמות"</span>
+                            <span class="lang-en" style="display:none;">Tami Arad appeals to Netanyahu: "Don't endanger fighters to recover bones"</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">לאחר שצה&quot;ל אישר כי כוחות מיוחדים פעלו בלבנון אבל לא איתרו ממצאים השייכים לרון ארד, פרסמה תמי ארד פוסט בפייסבוק שבו כתבה: &quot;הרצון שלנו לדעת מה קרה לרון נעצר ברגע שהוא פוגש סיכון של חיילי צה&qu...</span>
+                            <span class="lang-en" style="display:none;">After the IDF confirmed that special forces operated in Lebanon but did not locate findings belonging to Ron Arad, Tami Arad published a post on Facebook in which she wrote: "Our desire to know what happened to Ron stops as soon as he encounters a risk from IDF soldiers"...</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">ynet</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_e3a01fb2')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://www.ynet.co.il/news/article/b1s9fykkwg" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_06444ebb">
+                    <div class="tooltip">
+                        <a href="https://www.ynet.co.il/news/article/ryk0suyy11x" target="_blank" class="article-title">
+                            <span class="lang-he">כוחות מיוחדים פעלו בלבנון - אבל לא איתרו ממצאים השייכים לרון ארד</span>
+                            <span class="lang-en" style="display:none;">Special forces operated in Lebanon - but did not locate findings belonging to Ron Arad</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">כיוון נוסף נשלל: לאחר הדיווח על הנחתת מסוקים ופעילות קומנדו באל-בקאע בניסיון לאיתור עצמותיו של הנווט שמטוסו הופל לפני כמעט 40 שנה, אמרו בצה&quot;ל שהכוחות לא איתרו ממצאים הנוגעים לו. 41 נהרגו בלבנון, ...</span>
+                            <span class="lang-en" style="display:none;">Another direction was ruled out: after the report on the landing of helicopters and commando activity in al-Baka'a in an attempt to locate the bones of the navigator whose plane was shot down almost 40 years ago, the IDF said that the forces had not located any findings concerning him. 41 were killed in Lebanon, ...</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">ynet</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_06444ebb')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://www.ynet.co.il/news/article/ryk0suyy11x" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_26eac397">
+                    <div class="tooltip">
+                        <a href="https://www.ynet.co.il/news/article/s171rwtf11e" target="_blank" class="article-title">
+                            <span class="lang-he">נושאת מטוסים שלישית בדרך לאזור: המשמעות, וה-Don't של טראמפ לחות'ים</span>
+                            <span class="lang-en" style="display:none;">A third aircraft carrier is on the way to the region: the significance, and the Don't of Trump for the Houthis</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">מצטרפת ללינקולן ופורד: בארה&quot;ב דווח כי נושאת המטוסים בוש החלה להפליג עם קבוצת המשימה שלה, ותגיע למזרח הים התיכון תוך 12-10 יום. המשמעות: ארה&quot;ב מתכוננת למערכה ארוכה. היעדים: מניעת עליית מחירי ...</span>
+                            <span class="lang-en" style="display:none;">Joining Lincoln and Ford: In the US it was reported that the aircraft carrier Bush has begun sailing with its task group, and will reach the eastern Mediterranean in 10-12 days. The meaning: the USA is preparing for a long campaign. The goals: preventing price increases...</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">ynet</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_26eac397')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://www.ynet.co.il/news/article/s171rwtf11e" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_6332a095">
+                    <div class="tooltip">
+                        <a href="https://www.ynet.co.il/news/article/b1zoesutze" target="_blank" class="article-title">
+                            <span class="lang-he">גם המלחמה לא עוצרת את הפשיעה בחברה הערבית: 4 נרצחים מאז תחילת השבוע</span>
+                            <span class="lang-en" style="display:none;">Even the war does not stop crime in Arab society: 4 have been murdered since the beginning of the week</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">ברמב&quot;ם נקבע מותו של מוחמד אבו אלבסל שנורה אתמול בדרך למסגד. בנצרת נורה למוות בן 55. הם מצטרפים לאחמד אבו ג&#39;אבר שנורה במארב ברהט, ולעומרי נאטור שנדקר ע&quot;י בת זוגו בחיפה. מתחילת 2026 נרצחו ...</span>
+                            <span class="lang-en" style="display:none;">In Rambam, the death of Muhammad Abu Al-Basal, who was shot yesterday on the way to the mosque, was determined. In Nazareth, a 55-year-old was shot dead. They join Ahmed Abu Jaber, who was shot in an ambush in Berhat, and Omri Natur, who was stabbed by his partner in Haifa. From the beginning of 2026, they were murdered...</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">ynet</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_6332a095')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://www.ynet.co.il/news/article/b1zoesutze" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_810fb28f">
+                    <div class="tooltip">
+                        <a href="https://www.ynet.co.il/news/article/ryfiorkyzx" target="_blank" class="article-title">
+                            <span class="lang-he">בעסקת ענק: ישראל תקבל 27 אלף פצצות אמריקניות - שמייצרת חברה טורקית</span>
+                            <span class="lang-en" style="display:none;">In a huge deal: Israel will receive 27 thousand American bombs - produced by a Turkish company</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">בהודעה על עסקה אמריקנית בשווי 660 מיליון דולר עם ישראל צוין כי היא תכלול פצצות MK-80, המיוצרות בטקסס על ידי חברה בת של &quot;רפקון&quot; הטורקית. בוושינגטון ממשיך ממשל טראמפ לעקוף את הקונגרס כדי למכור...</span>
+                            <span class="lang-en" style="display:none;">In an announcement about an American deal worth 660 million dollars with Israel, it was stated that it would include MK-80 bombs, manufactured in Texas by a subsidiary of &quot;Refcon&quot; the turkish In Washington, the Trump administration continues to bypass Congress to sell...</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">ynet</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_810fb28f')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://www.ynet.co.il/news/article/ryfiorkyzx" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_39087023">
+                    <div class="tooltip">
+                        <a href="https://www.ynet.co.il/news/article/rj2iqhfyze" target="_blank" class="article-title">
+                            <span class="lang-he">מטוסים הושמדו על הקרקע, בסיס הצי ניזוק | צפו בתמונות הלוויין מאיראן</span>
+                            <span class="lang-en" style="display:none;">Planes were destroyed on the ground, the naval base was damaged View the satellite images from Iran</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">שני מטוסי קרב סוחוי Su-24 הושמדו בנמל התעופה בשיראז, לצד שלושה מטוסים נוספים. כך עולה מצילומי הלוויין, שחשפו את ההרס הרב גם בבסיס הימי בנדר בחבוח, בסמוך למצר הורמוז ועיר הנמל האסטרטגית בנדר עבאס. וגם:...</span>
+                            <span class="lang-en" style="display:none;">Two Sukhoi Su-24 fighter jets were destroyed at Shiraz airport, along with three other planes. This is shown by the satellite photographs, which also revealed the extensive destruction at the Bandar naval base in Habuh, near the Strait of Hormuz and the strategic port city of Bandar Abbas. also:...</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">ynet</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_39087023')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://www.ynet.co.il/news/article/rj2iqhfyze" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_80829424">
+                    <div class="tooltip">
+                        <a href="https://www.ynet.co.il/news/article/hyurxiyy11g" target="_blank" class="article-title">
+                            <span class="lang-he">נשיא איראן "התנצל" בפני מדינות המפרץ | תיעוד דרמטי: פגיעת כטב"ם בנמל התעופה בדובאי</span>
+                            <span class="lang-en" style="display:none;">The president of Iran "apologized" to the Gulf countries Dramatic documentation: UAV hit at Dubai airport</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">אחרי ששיגרו יותר מאלף טילים וכטב&quot;מים לאיחוד האמירויות לבדה, ועוד מאות רבות לשבע מדינות אחרות במפרץ, איראן משנה כיוון? &quot;מדינות שכנות לא יותקפו, אלא אם התקפה נגדנו תגיע משטחן&quot;, אמר הנשיא ...</span>
+                            <span class="lang-en" style="display:none;">After launching more than a thousand missiles and water cannons at the United Arab Emirates alone, and many hundreds more at seven other countries in the Gulf, Iran is changing direction? "Neighboring countries will not be attacked, unless an attack against us comes from their territory," the president said...</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">ynet</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_80829424')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://www.ynet.co.il/news/article/hyurxiyy11g" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_9bf927e4">
+                    <div class="tooltip">
+                        <a href="https://www.ynet.co.il/news/article/by0050eyy11e" target="_blank" class="article-title">
+                            <span class="lang-he">בעיטות, אגרופים ו"הווירוס הפרוגרסיבי": אלימות ב"טקס זיכרון לחמינאי" בניו יורק</span>
+                            <span class="lang-en" style="display:none;">Kicking, punching and the "progressive virus": violence at the "Memorial ceremony for Khamenei" in New York</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">תומכי איראן ופעילי שמאל רדיקלי הקימו בוושינגטון סקוור אתר זיכרון מאולתר לחמינאי וקראו: &quot;מוות לאמריקה ולישראל. עלינו לחיות ולמות כמו האייתוללה&quot;. מנגד הפגינו גולים איראנים ותומכי ימין, ובשלב מ...</span>
+                            <span class="lang-en" style="display:none;">Supporters of Iran and radical left activists set up a makeshift memorial site for Khamenei in Washington Square and read: "Death to America and Israel." We must live and die like the Ayatollah. On the other hand, Iranian exiles and right-wing supporters demonstrated, and at the stage of...</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">ynet</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_9bf927e4')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://www.ynet.co.il/news/article/by0050eyy11e" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_e0890090">
+                    <div class="tooltip">
+                        <a href="https://www.ynet.co.il/news/article/hyakpp00kwe" target="_blank" class="article-title">
+                            <span class="lang-he">ההתרעות המקדימות הקצרות לפני האזעקות אמש, וההסברים האפשריים</span>
+                            <span class="lang-en" style="display:none;">The short preliminary warnings before the alarms last night, and the possible explanations</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">בצה&quot;ל לא הסבירו למה ההתרעה על ירי מאיראן התקבלה אמש שתי דקות או דקה לפני הפעלת הצופרים במרכז, אבל ייתכן שהפגיעה במכ&quot;ם האמריקני הגדול ביותר באזור ובלפחות מכ&quot;ם אחד של מערכת ה-THAAD היו מה...</span>
+                            <span class="lang-en" style="display:none;">The IDF did not explain why the warning about firing from Iran was received last night two minutes or a minute before the sirens were activated in the center, but it is possible that the damage to the largest American radar in the region and at least one of the THAAD system radars were what...</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">ynet</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_e0890090')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://www.ynet.co.il/news/article/hyakpp00kwe" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+</div>
+</div>
+<div id="AI וטכנולוגיה" class="news-section" style="display:none">
+<div class="sub-header"><span class="lang-he">בינה מלאכותית</span><span class="lang-en" style="display:none;">Artificial intelligence</span></div>
+<div class="news-grid">
+</div>
+<div class="sub-header"><span class="lang-he">הייטק ופיתוח</span><span class="lang-en" style="display:none;">High-tech and development</span></div>
+<div class="news-grid">
+
+                <div class="card" id="article_5c5d6456">
+                    <div class="tooltip">
+                        <a href="https://ki-editor.org/" target="_blank" class="article-title">
+                            <span class="lang-he">Ki Editor - an editor that operates on the AST</span>
+                            <span class="lang-en" style="display:none;">Ki Editor - an editor that operates on the AST</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">Comments</span>
+                            <span class="lang-en" style="display:none;">Comments</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Hacker News</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_5c5d6456')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://ki-editor.org/" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_ece09f6a">
+                    <div class="tooltip">
+                        <a href="https://torrentfreak.com/uploading-pirated-books-via-bittorrent-qualifies-as-fair-use-meta/" target="_blank" class="article-title">
+                            <span class="lang-he">Uploading Pirated Books via BitTorrent Qualifies as Fair Use, Meta Argues</span>
+                            <span class="lang-en" style="display:none;">Uploading Pirated Books via BitTorrent Qualifies as Fair Use, Meta Argues</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">Comments</span>
+                            <span class="lang-en" style="display:none;">Comments</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Hacker News</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_ece09f6a')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://torrentfreak.com/uploading-pirated-books-via-bittorrent-qualifies-as-fair-use-meta/" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_41b55263">
+                    <div class="tooltip">
+                        <a href="https://changelog.qgis.org/en/version/4.0/" target="_blank" class="article-title">
+                            <span class="lang-he">QGIS 4.0</span>
+                            <span class="lang-en" style="display:none;">QGIS 4.0</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">Comments</span>
+                            <span class="lang-en" style="display:none;">Comments</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Hacker News</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_41b55263')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://changelog.qgis.org/en/version/4.0/" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_6e1293f4">
+                    <div class="tooltip">
+                        <a href="https://github.com/golang/go/issues/62026" target="_blank" class="article-title">
+                            <span class="lang-he">UUID package coming to Go standard library</span>
+                            <span class="lang-en" style="display:none;">UUID package coming to Go standard library</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">Comments</span>
+                            <span class="lang-en" style="display:none;">Comments</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Hacker News</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_6e1293f4')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://github.com/golang/go/issues/62026" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_5e3337b5">
+                    <div class="tooltip">
+                        <a href="https://news.ycombinator.com/item?id=47282777" target="_blank" class="article-title">
+                            <span class="lang-he">Tell HN: I'm 60 years old. Claude Code has re-ignited a passion</span>
+                            <span class="lang-en" style="display:none;">Tell HN: I'm 60 years old. Claude Code has re-ignited a passion</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">Comments</span>
+                            <span class="lang-en" style="display:none;">Comments</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Hacker News</span>
+                            <span class="time-tag">Sat, 07 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_5e3337b5')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://news.ycombinator.com/item?id=47282777" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_8cc3f505">
+                    <div class="tooltip">
+                        <a href="https://plasma-bigscreen.org" target="_blank" class="article-title">
+                            <span class="lang-he">Plasma Bigscreen – 10-foot interface for KDE plasma</span>
+                            <span class="lang-en" style="display:none;">Plasma Bigscreen – 10-foot interface for KDE plasma</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">Comments</span>
+                            <span class="lang-en" style="display:none;">Comments</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Hacker News</span>
+                            <span class="time-tag">Fri, 06 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_8cc3f505')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://plasma-bigscreen.org" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_39dafdae">
+                    <div class="tooltip">
+                        <a href="https://helix-editor.com/" target="_blank" class="article-title">
+                            <span class="lang-he">Helix: A post-modern text editor</span>
+                            <span class="lang-en" style="display:none;">Helix: A post-modern text editor</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">Comments</span>
+                            <span class="lang-en" style="display:none;">Comments</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Hacker News</span>
+                            <span class="time-tag">Fri, 06 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_39dafdae')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://helix-editor.com/" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_97e0fbae">
+                    <div class="tooltip">
+                        <a href="https://will-keleher.com/posts/this-css-makes-me-human/" target="_blank" class="article-title">
+                            <span class="lang-he">this css proves me human</span>
+                            <span class="lang-en" style="display:none;">this css proves me human</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">Comments</span>
+                            <span class="lang-en" style="display:none;">Comments</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Hacker News</span>
+                            <span class="time-tag">Fri, 06 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_97e0fbae')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://will-keleher.com/posts/this-css-makes-me-human/" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_a646aad5">
+                    <div class="tooltip">
+                        <a href="https://www.science.org/content/article/galileo-s-handwritten-notes-found-ancient-astronomy-text" target="_blank" class="article-title">
+                            <span class="lang-he">Galileo's handwritten notes found in ancient astronomy text</span>
+                            <span class="lang-en" style="display:none;">Galileo's handwritten notes found in ancient astronomy text</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">Comments</span>
+                            <span class="lang-en" style="display:none;">Comments</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Hacker News</span>
+                            <span class="time-tag">Thu, 05 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_a646aad5')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://www.science.org/content/article/galileo-s-handwritten-notes-found-ancient-astronomy-text" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="article_6b88c58e">
+                    <div class="tooltip">
+                        <a href="https://jacquesmattheij.com/48x32-introduction/" target="_blank" class="article-title">
+                            <span class="lang-he">48x32, a 1536 LED Game Computer</span>
+                            <span class="lang-en" style="display:none;">48x32, a 1536 LED Game Computer</span>
+                        </a>
+                        <span class="tooltiptext">
+                            <strong class="lang-he">תקציר:</strong><strong class="lang-en" style="display:none;">Summary:</strong><br>
+                            <span class="lang-he">Comments</span>
+                            <span class="lang-en" style="display:none;">Comments</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span class="source-tag">Hacker News</span>
+                            <span class="time-tag">Thu, 05 Mar 2026</span>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn share-btn" onclick="shareLink('article_6b88c58e')" title="שתף קישור לאתר שלי">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <a href="https://jacquesmattheij.com/48x32-introduction/" target="_blank" class="action-btn link-btn" title="לכתבה המקורית">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+</div>
+</div>
     </div>
+    
+    <div id="toast" style="visibility: hidden; min-width: 250px; background-color: var(--accent); color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 1rem;">
+        הקישור הועתק!
+    </div>
+
     <script>
         function toggleTheme() {
             const body = document.body;
@@ -95,21 +968,64 @@
             body.setAttribute('data-theme', isDark ? 'light' : 'dark');
             localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
+        
         function toggleLang() {
             const html = document.getElementById('html-tag');
             const isHeb = html.getAttribute('dir') === 'rtl';
+            
+            // Switch HTML attributes
             html.setAttribute('dir', isHeb ? 'ltr' : 'rtl');
             html.setAttribute('lang', isHeb ? 'en' : 'he');
-            document.getElementById('main-title').innerHTML = isHeb ? '<i class="fas fa-globe"></i> Ohad Baram News Dashboard' : '<i class="fas fa-globe"></i> לוח החדשות של אוהד ברעם';
+            
+            // Toggle all language spans
+            document.querySelectorAll('.lang-he').forEach(el => el.style.display = isHeb ? 'none' : 'inline-block');
+            document.querySelectorAll('.lang-en').forEach(el => el.style.display = isHeb ? 'inline-block' : 'none');
+            
+            localStorage.setItem('lang', isHeb ? 'en' : 'he');
         }
+        
         function showCategory(id) {
             document.querySelectorAll('.news-section').forEach(s => s.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).style.display = 'block';
             event.currentTarget.classList.add('active');
         }
+        
+        function shareLink(articleId) {
+            // מעתיק את הקישור הישיר לידיעה באתר שלך
+            const url = window.location.href.split('#')[0] + '#' + articleId;
+            navigator.clipboard.writeText(url).then(() => {
+                const toast = document.getElementById("toast");
+                toast.innerHTML = document.getElementById('html-tag').getAttribute('lang') === 'en' ? "Link copied!" : "הקישור הועתק!";
+                toast.style.visibility = "visible";
+                setTimeout(() => { toast.style.visibility = "hidden"; }, 3000);
+            });
+        }
+        
+        // Setup on load
         document.querySelector('.tab-btn').click();
-        if(localStorage.getItem('theme')) document.body.setAttribute('data-theme', localStorage.getItem('theme'));
+        if(localStorage.getItem('theme') === 'light') toggleTheme();
+        if(localStorage.getItem('lang') === 'en') toggleLang();
+        
+        // Check if arrived from a shared link and scroll to it
+        window.onload = () => {
+            const hash = window.location.hash;
+            if (hash) {
+                const targetCard = document.querySelector(hash);
+                if (targetCard) {
+                    // Find which tab it belongs to and open it
+                    const parentSection = targetCard.closest('.news-section');
+                    if(parentSection) {
+                        const tabBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.textContent.trim() === parentSection.id);
+                        if(tabBtn) tabBtn.click();
+                    }
+                    // Highlight and scroll
+                    targetCard.classList.add('highlight-card');
+                    setTimeout(() => targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' }), 500);
+                    setTimeout(() => targetCard.classList.remove('highlight-card'), 6000);
+                }
+            }
+        };
     </script>
 </body>
 </html>
