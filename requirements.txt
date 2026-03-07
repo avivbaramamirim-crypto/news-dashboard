@@ -4,3 +4,4 @@ python-dateutil
 pytz
 feedparser
 lxml
+deep-translator
