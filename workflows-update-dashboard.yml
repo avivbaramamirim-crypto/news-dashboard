@@ -1,15 +1,15 @@
-name: Update Dashboard Every 6 Hours
+name: Update Dashboard
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # רץ כל 6 שעות
-  workflow_dispatch:      # מאפשר לך להריץ ידנית לבדיקה
+    - cron: '*/32 * * * *' # רץ כל 32 דקות
+  workflow_dispatch:      # מאפשר הרצה ידנית
 
 jobs:
   update:
     runs-on: ubuntu-latest
     permissions:
-      contents: write     # חובה! זה מה שפותר את שגיאה 128 באופן סופי
+      contents: write     # חובה כדי לשמור את הקובץ
     
     steps:
       - name: Checkout code
@@ -22,15 +22,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt || pip install requests feedparser
+          pip install -r requirements.txt
 
       - name: Run news fetcher
         run: python fetch_news.py
 
-      - name: Commit and Push changes
+      - name: Force Commit and Push
         run: |
-          git config --global user.email 'action@github.com'
-          git config --global user.name 'GitHub Action'
-          git add .
-          # הפקודה הבאה תבצע קומיט רק אם יש שינויים (כדי למנוע שגיאות ריקות)
-          git diff --quiet && git diff --staged --quiet || (git commit -m '🔄 Update dashboard' && git push)
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add index.html
+          git commit -m "🚀 Force update dashboard" || echo "No changes to commit"
+          git push origin main
